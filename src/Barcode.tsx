@@ -72,6 +72,7 @@ type Props = JSBarCode & {
   style?: ViewStyle;
   scrollable?: boolean;
   LoadingComponent?: React.Component;
+  webviewProps?: React.ComponentProps<typeof WebView>;
 };
 
 export default function Barcode({
@@ -79,6 +80,7 @@ export default function Barcode({
   scrollable = true,
   LoadingComponent,
   value,
+  webviewProps,
   ...JSBarCodeProps
 }: Props) {
   const [loading, setLoading] = useState(true);
@@ -92,33 +94,23 @@ export default function Barcode({
     console.warn('WebView error: ', nativeEvent);
 
   useEffect(() => {
-    console.log(`drawBarcode(${value}, ${JSON.stringify(JSBarCodeProps)});`);
     webViewRef.current?.injectJavaScript(
       `drawBarcode(${value}, ${JSON.stringify(JSBarCodeProps)});`
     );
   }, [value, JSBarCodeProps]);
 
-  console.log('html', html);
   return (
     <View style={[styles.container, style]}>
       <WebView
         source={{ html }}
-        // source={{ uri: 'http://10.0.2.2:5173/' }}
         bounces={false}
-        // style={[webviewContainerStyle]}
         scrollEnabled={scrollable}
         androidLayerType="hardware"
-        // androidHardwareAccelerationDisabled={
-        //   androidHardwareAccelerationDisabled
-        // }
         ref={webViewRef}
-        // useWebKit={true}
-        // source={source}
-        // onMessage={getSignature}
-        // injectedJavaScript={`drawBarcode('Hello12')`}
         javaScriptEnabled={true}
         onError={onError}
         onLoadEnd={onLoadEnd}
+        {...webviewProps}
       />
       {loading && (
         <View style={styles.loadingOverlayContainer}>
