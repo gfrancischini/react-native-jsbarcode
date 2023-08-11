@@ -13,6 +13,7 @@
     "android",
     "ios",
     "cpp",
+    "html/dist/rn-index.html.js",
     "*.podspec",
     "!lib/typescript/example",
     "!ios/build",
