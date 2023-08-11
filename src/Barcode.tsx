@@ -1,10 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { ViewStyle } from 'react-native';
 import { ActivityIndicator } from 'react-native';
 import { View } from 'react-native';
 import { StyleSheet } from 'react-native';
 import WebView from 'react-native-webview';
 import type { WebViewErrorEvent } from 'react-native-webview/lib/WebViewTypes';
+
+const html = require('../html/dist/rn-index.html.js').default;
 
 const styles = StyleSheet.create({
   container: {
@@ -22,7 +24,51 @@ const styles = StyleSheet.create({
   },
 });
 
-type Props = {
+// JsBarcode('#code128', 'Hi!');
+// JsBarcode('#ean-13', '1234567890128', { format: 'ean13' });
+// JsBarcode('#ean-8', '12345670', { format: 'ean8' });
+// JsBarcode('#ean-5', '12345', { format: 'ean5' });
+// JsBarcode('#ean-2', '12', { format: 'ean2' });
+// JsBarcode('#upc-a', '123456789012', { format: 'upc' });
+// JsBarcode('#code39', 'Hello', { format: 'code39' });
+// JsBarcode('#itf-14', '1234567890123', { format: 'itf14' });
+// JsBarcode('#msi', '123456', { format: 'msi' });
+// JsBarcode('#pharmacode', '12345', { format: 'pharmacode' });
+
+type JSBarCodeFormat =
+  | 'code128'
+  | 'ean13'
+  | 'ean8'
+  | 'ean5'
+  | 'ean2'
+  | 'upc'
+  | 'code39'
+  | 'itf14'
+  | 'msi'
+  | 'pharmacode';
+
+type JSBarCode = {
+  value: string;
+  format?: JSBarCodeFormat;
+  width?: number;
+  height?: number;
+  displayValue?: boolean;
+  fontOptions?: string;
+  font?: string;
+  textAlign?: string;
+  textPosition?: string;
+  textMargin?: number;
+  fontSize?: number;
+  background?: string;
+  lineColor?: string;
+  margin?: number;
+  marginTop?: number;
+  marginBottom?: number;
+  marginLeft?: number;
+  marginRight?: number;
+};
+
+type Props = JSBarCode & {
   style?: ViewStyle;
   scrollable?: boolean;
   LoadingComponent?: React.Component;
@@ -32,6 +78,8 @@ export default function Barcode({
   style,
   scrollable = true,
   LoadingComponent,
+  value,
+  ...JSBarCodeProps
 }: Props) {
   const [loading, setLoading] = useState(true);
   const webViewRef = useRef<React.ComponentRef<typeof WebView>>(null);
@@ -43,10 +91,19 @@ export default function Barcode({
   const onError = ({ nativeEvent }: WebViewErrorEvent) =>
     console.warn('WebView error: ', nativeEvent);
 
+  useEffect(() => {
+    console.log(`drawBarcode(${value}, ${JSON.stringify(JSBarCodeProps)});`);
+    webViewRef.current?.injectJavaScript(
+      `drawBarcode(${value}, ${JSON.stringify(JSBarCodeProps)});`
+    );
+  }, [value, JSBarCodeProps]);
+
+  console.log('html', html);
   return (
     <View style={[styles.container, style]}>
       <WebView
-        source={{ uri: 'https://expo.dev' }}
+        source={{ html }}
+        // source={{ uri: 'http://10.0.2.2:5173/' }}
         bounces={false}
         // style={[webviewContainerStyle]}
         scrollEnabled={scrollable}
@@ -58,6 +115,7 @@ export default function Barcode({
         // useWebKit={true}
         // source={source}
         // onMessage={getSignature}
+        // injectedJavaScript={`drawBarcode('Hello12')`}
         javaScriptEnabled={true}
         onError={onError}
         onLoadEnd={onLoadEnd}

@@ -6,13 +6,14 @@ import { Barcode } from 'react-native-jsbarcode';
 export default function App() {
   return (
     <View style={styles.container}>
-      <Barcode />
+      <Barcode value={'1234567890128'} format="ean13" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 100,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
