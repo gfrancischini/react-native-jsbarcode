@@ -11,11 +11,11 @@ npm install react-native-jsbarcode
 ## Usage
 
 ```js
-import { multiply } from 'react-native-jsbarcode';
+import { Barcode } from 'react-native-jsbarcode';
 
 // ...
 
-const result = await multiply(3, 7);
+<Barcode value={'1234567890128'} format="ean13" />
 ```
 
 ## Contributing
