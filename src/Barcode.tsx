@@ -95,7 +95,7 @@ export default function Barcode({
 
   useEffect(() => {
     webViewRef.current?.injectJavaScript(
-      `drawBarcode(${value}, ${JSON.stringify(JSBarCodeProps)});`
+      `drawBarcode('${value}', ${JSON.stringify(JSBarCodeProps)});`
     );
   }, [value, JSBarCodeProps]);
 

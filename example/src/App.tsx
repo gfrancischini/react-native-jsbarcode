@@ -7,6 +7,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Barcode value={'1234567890128'} format="ean13" />
+      <Barcode value={'0001234567890'} format="upc" />
     </View>
   );
 }
