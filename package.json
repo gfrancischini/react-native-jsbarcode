@@ -1,6 +1,6 @@
 {
   "name": "react-native-jsbarcodes",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "A <Barcode/> component for use with React-Native. This library wrapped JsBarcode.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
